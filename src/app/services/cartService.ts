@@ -1,21 +1,11 @@
-import { Component, signal } from '@angular/core';
-import { Product } from '../../modules/products.model';
-import { ProductCard } from './product-card/product-card';
+import { Injectable, signal } from '@angular/core';
+import { Product } from '../modules/products.model';
 
-@Component({
-  selector: 'app-products-list',
-  imports: [ProductCard],
-  template: `
-    <div class="p-8 grid grid-cols-2 gap-4">
-      @for (product of products(); track product.id) {
-      <app-product-card [product]="product" />
-      }
-    </div>
-  `,
-  styles: ``,
+@Injectable({
+  providedIn: 'root',
 })
-export class ProductsList {
-  products = signal<Product[]>([
+export class cartService {
+  cart = signal<Product[]>([
     {
       id: 1,
       title: 'Fjallraven - Foldsack No. 1 Backpack, Fits 15 Laptops',
@@ -47,4 +37,12 @@ export class ProductsList {
       stock: 7,
     },
   ]);
+
+  addToCart(product: Product) {
+    this.cart.set([...this.cart(), product]);
+  }
+
+  removeFromCart(id: number) {
+    this.cart.set(this.cart().filter((p) => p.id !== id));
+  }
 }
